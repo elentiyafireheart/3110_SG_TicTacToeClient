@@ -4,19 +4,41 @@ using Unity.Collections;
 using Unity.Networking.Transport;
 using System.Text;
 
+#region GameState
+public enum GameState
+{
+    Login,
+    Game,
+    Play
+}
+
+#endregion
+
 public class NetworkClient : MonoBehaviour
 {
+    #region Variables
+
     NetworkDriver networkDriver;
     NetworkConnection networkConnection;
     NetworkPipeline reliableAndInOrderPipeline;
     NetworkPipeline nonReliableNotInOrderedPipeline;
+
     const ushort NetworkPort = 9001;
     const string IPAddress = "10.0.0.31";
 
+    private GameStates gameStateManager;
+    private bool player1;
+
+    #endregion
+
+
     void Start()
     {
+        gameStateManager = FindObjectOfType<GameStates>();
+
         networkDriver = NetworkDriver.Create();
-        reliableAndInOrderPipeline = networkDriver.CreatePipeline(typeof(FragmentationPipelineStage), typeof(ReliableSequencedPipelineStage));
+        reliableAndInOrderPipeline = networkDriver.CreatePipeline(typeof(FragmentationPipelineStage),
+            typeof(ReliableSequencedPipelineStage));
         nonReliableNotInOrderedPipeline = networkDriver.CreatePipeline(typeof(FragmentationPipelineStage));
         networkConnection = default(NetworkConnection);
         NetworkEndpoint endpoint = NetworkEndpoint.Parse(IPAddress, NetworkPort, NetworkFamily.Ipv4);
@@ -34,8 +56,8 @@ public class NetworkClient : MonoBehaviour
     {
         #region Check Input and Send Msg
 
-        if (Input.GetKeyDown(KeyCode.A))
-            SendMessageToServer("Hello server's world, sincerely your network client");
+        // if (Input.GetKeyDown(KeyCode.A))
+        //       SendMessageToServer("Hello server's world, sincerely your network client");
 
         #endregion
 
@@ -88,7 +110,8 @@ public class NetworkClient : MonoBehaviour
         #endregion
     }
 
-    private bool PopNetworkEventAndCheckForData(out NetworkEvent.Type networkEventType, out DataStreamReader streamReader, out NetworkPipeline pipelineUsedToSendEvent)
+    private bool PopNetworkEventAndCheckForData(out NetworkEvent.Type networkEventType,
+        out DataStreamReader streamReader, out NetworkPipeline pipelineUsedToSendEvent)
     {
         networkEventType = networkConnection.PopEvent(networkDriver, out streamReader, out pipelineUsedToSendEvent);
 
@@ -100,6 +123,51 @@ public class NetworkClient : MonoBehaviour
     private void ProcessReceivedMsg(string msg)
     {
         Debug.Log("Msg received = " + msg);
+
+        #region Recieved Signifiers
+
+        string[] parts = msg.Split(',');
+
+        int identifier;
+        if (!int.TryParse(parts[0], out identifier))
+        {
+            Debug.LogError("Failed to parse identifier: " + parts[0]);
+            return;
+        }
+
+        #endregion
+
+        #region Login Identifiers
+
+        if (identifier == ServerClientSignifiers.LoginComplete)
+        {
+            gameStateManager.OnServerMessageReceived("LoginSuccess");
+        }
+        else if (identifier == ServerClientSignifiers.LoginFailed)
+        {
+            Debug.Log("LOGIN FAILED!");
+
+            if (parts.Length > 1)
+            {
+                if (parts[1] == "WrongPassword")
+                {
+                    Debug.Log("Login failed: Incorrect password");
+                    FindObjectOfType<Login>().feedbackText.text = "Incorrect password. Please try again.";
+                }
+                else if (parts[1] == "UserNotFound")
+                {
+                    Debug.Log("Login failed: Username not found");
+                    FindObjectOfType<Login>().feedbackText.text = "Username not found. Please create an account.";
+                }
+            }
+            else
+            {
+                Debug.Log("Login failed: General error");
+                FindObjectOfType<Login>().feedbackText.text = "Login failed. Please try again.";
+            }
+        }
+
+        #endregion
     }
 
     public void SendMessageToServer(string msg)
@@ -116,5 +184,43 @@ public class NetworkClient : MonoBehaviour
         buffer.Dispose();
     }
 
+    public bool IsPlayer
+    {
+        get { return player1; }
+    }
 }
+
+#region Signifiers
+    public static class ClientServerSignifiers
+    {
+        public const int CreateAccount = 1;
+        public const int Login = 2;
+
+        public const int JoinQueue = 3;
+        public const int MakeMove = 4;
+
+
+        public const int ChosenAsPlayerOne = 5;
+        public const int ChosenAsPlayerTwo = 7;
+
+        public const int OpponentChoseASquare = 8;
+    }
+
+    public static class ServerClientSignifiers
+    {
+        public const int LoginComplete = 1;
+        public const int LoginFailed = 2;
+
+        public const int AccountCreated = 3;
+        public const int AccountCreationFailed = 4;
+
+        public const int StartGame = 5;
+
+        public const int ChosenAsPlayerOne = 6;
+        public const int ChosenAsPlayerTwo = 7;
+
+        public const int OpponentChoseASquare = 8;
+
+    }
+    #endregion
 

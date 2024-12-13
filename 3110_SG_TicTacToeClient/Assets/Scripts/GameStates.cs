@@ -16,6 +16,7 @@ public class GameStates : MonoBehaviour
         SetState(GameState.Login);
     }
 
+
     public void SetState(GameState newState)
     {
         currentState = newState;

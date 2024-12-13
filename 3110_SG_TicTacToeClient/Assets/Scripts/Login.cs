@@ -86,6 +86,7 @@ public class Login : MonoBehaviour
         if (response == "LoginFailed")
         {
             feedbackText.text = "Incorrect username or password.";
+
         }
         else if (response == "LoginSuccess")
         {

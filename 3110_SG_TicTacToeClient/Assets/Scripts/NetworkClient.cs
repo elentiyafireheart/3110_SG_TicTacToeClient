@@ -8,8 +8,8 @@ using System.Text;
 public enum GameState
 {
     Login,
-    Game,
-    Play
+    GameRoom,
+    PlayGame
 }
 
 #endregion

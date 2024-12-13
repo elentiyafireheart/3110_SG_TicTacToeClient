@@ -31,12 +31,12 @@ public class GameStates : MonoBehaviour
                 gameRoomPanel.SetActive(false);
                 gamePlayPanel.SetActive(false);
                 break;
-            case GameState.Game:
+            case GameState.GameRoom:
                 loginPanel.SetActive(false);
                 gameRoomPanel.SetActive(true);
                 gamePlayPanel.SetActive(false);
                 break;
-            case GameState.Play:
+            case GameState.PlayGame:
                 loginPanel.SetActive(false);
                 gameRoomPanel.SetActive(false);
                 gamePlayPanel.SetActive(true);
@@ -55,7 +55,7 @@ public class GameStates : MonoBehaviour
         if (message == "LoginSuccess")
         {
             Debug.Log("Changing state...");
-            SetState(GameState.Game);
+            SetState(GameState.GameRoom);
         }
         else if (message == "LoginFailed")
         {

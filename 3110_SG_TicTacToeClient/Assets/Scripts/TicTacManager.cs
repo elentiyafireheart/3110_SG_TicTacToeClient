@@ -63,6 +63,7 @@ public class TicTacManager : MonoBehaviour
             Debug.Log(isPlayer1 + " - isPlayer2");
         }
 
+        CheckGameState();
         #endregion
     }
 
@@ -85,7 +86,7 @@ public class TicTacManager : MonoBehaviour
         }
     }
 
-    public void HandleSquarePressed(TicTacToeSquare squarePressed)
+    void HandleSquarePressed(TicTacToeSquare squarePressed)
     {
         if (!isPlayerTurn || squarePressed.isSquareTaken)
             return;

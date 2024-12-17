@@ -942,7 +942,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -116.100006}
+  m_AnchoredPosition: {x: 0, y: -160}
   m_SizeDelta: {x: 189, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &401351697
@@ -1478,7 +1478,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter text...
+  m_text: Password
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1741,7 +1741,7 @@ GameObject:
   - component: {fileID: 963351262}
   - component: {fileID: 963351261}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: BoardGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1854,7 +1854,6 @@ GameObject:
   - component: {fileID: 965874199}
   - component: {fileID: 965874198}
   - component: {fileID: 965874200}
-  - component: {fileID: 965874201}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1911,25 +1910,6 @@ MonoBehaviour:
   passwordInput: {fileID: 784258370}
   feedbackText: {fileID: 1869086565}
   ConnectionToHost: {fileID: 1458493963}
---- !u!114 &965874201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 965874197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c54881f8d56f5343bae0867b40481c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  squarePrefab: {fileID: 4897800124181124243, guid: b222fdf63dade2245aa2409168076aff, type: 3}
-  gridParent: {fileID: 963351260}
-  playerNameText: {fileID: 1081791174}
-  player2Text: {fileID: 1707461726}
-  ticTacToeSquares: []
-  player1Icon: X
-  player2Icon: O
 --- !u!1 &1023199549
 GameObject:
   m_ObjectHideFlags: 0
@@ -3090,7 +3070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb67aa442594c424385212103c8ba84c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsPlayer1: 0
+  isPlayer1: 0
 --- !u!4 &1458493965
 Transform:
   m_ObjectHideFlags: 0
@@ -3117,6 +3097,7 @@ GameObject:
   - component: {fileID: 1472272603}
   - component: {fileID: 1472272605}
   - component: {fileID: 1472272604}
+  - component: {fileID: 1472272606}
   m_Layer: 5
   m_Name: Game Play Panel
   m_TagString: Untagged
@@ -3184,6 +3165,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1472272602}
   m_CullTransparentMesh: 1
+--- !u!114 &1472272606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472272602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c54881f8d56f5343bae0867b40481c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  squarePrefab: {fileID: 4897800124181124243, guid: b222fdf63dade2245aa2409168076aff, type: 3}
+  gridParent: {fileID: 963351260}
+  playerNameText: {fileID: 1081791174}
+  player2Text: {fileID: 1707461726}
+  ticTacToeSquares: []
+  player1Icon: X
+  player2Icon: O
+  currentPlayerIcon: 
 --- !u!1 &1489159608
 GameObject:
   m_ObjectHideFlags: 0
@@ -3556,7 +3557,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -64.1}
+  m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 189, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1577313190
@@ -3865,7 +3866,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter text...
+  m_text: Username
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4381,9 +4382,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '
-
-'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4416,9 +4415,9 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -4474,11 +4473,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1326979112}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -4, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
-  m_Pivot: {x: 1, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 177, y: -110}
+  m_SizeDelta: {x: 217, y: 31.6974}
+  m_Pivot: {x: 1, y: 1}
 --- !u!1 &1918299318
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,7 +27,7 @@ public class NetworkClient : MonoBehaviour
     const string IPAddress = "10.0.0.31";
 
     private GameStates gameStateManager;
-    private bool player1;
+    public bool isPlayer1;
 
     #endregion
 
@@ -168,6 +168,72 @@ public class NetworkClient : MonoBehaviour
         }
 
         #endregion
+
+        #region Start Game
+
+        else if (identifier == ServerClientSignifiers.StartGame)
+        {
+            FindObjectOfType<GameRoomUI>().OnOpponentJoined();
+            gameStateManager.SetState(GameState.PlayGame);
+        }
+
+        #endregion
+
+        #region Chosen player 1 VS player 2
+
+        else if (identifier == ServerClientSignifiers.ChosenAsPlayerOne)
+        {
+            isPlayer1 = true;
+            FindObjectOfType<TicTacManager>().AssignPlayers(IsPlayer1);
+            Debug.LogError("Player One chosen");
+
+        }
+        else if (identifier == ServerClientSignifiers.ChosenAsPlayerTwo)
+        {
+            isPlayer1 = false;
+            FindObjectOfType<TicTacManager>().AssignPlayers(IsPlayer1);
+            Debug.LogError("Player two chosen");
+
+        }
+
+        #endregion
+
+        #region Making move
+
+        else if (identifier == ClientServerSignifiers.MakeMove)
+        {
+            Debug.Log("Move has been made, checking state..");
+            if (parts.Length >= 3)
+            {
+                int row = int.Parse(parts[1]);
+                int col = int.Parse(parts[2]);
+
+                // Find the TicTacToeManager and update the board
+                TicTacManager ticTacToeManager = FindObjectOfType<TicTacManager>();
+                if (ticTacToeManager != null)
+                {
+                    ticTacToeManager.OnOpponentMove(row, col);
+                    FindObjectOfType<TicTacManager>().CheckGameState();
+                }
+                else
+                {
+                    Debug.LogError("TicTacToeManager not found!");
+                }
+
+            }
+        }
+
+        #endregion
+
+        #region All fails - Send Debug message saying HUH???
+
+        else
+        {
+            Debug.LogWarning("Unknown message received: " + msg);
+        }
+
+        #endregion
+
     }
 
     public void SendMessageToServer(string msg)
@@ -184,11 +250,23 @@ public class NetworkClient : MonoBehaviour
         buffer.Dispose();
     }
 
-    public bool IsPlayer
+    public bool IsPlayer1
     {
-        get { return player1; }
+        get { return isPlayer1; }
     }
+
+    public void SetPlayerRole(bool isPlayer1)
+    {
+        this.isPlayer1 = isPlayer1;
+
+        // Send the role information to the server
+        string msg = isPlayer1 ? ClientServerSignifiers.ChosenAsPlayerOne.ToString() : ClientServerSignifiers.ChosenAsPlayerTwo.ToString();
+        SendMessageToServer(msg);
+
+    }
+
 }
+
 
 #region Signifiers
     public static class ClientServerSignifiers
